@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>بوابة الموظفين – مركز آل حنزاب</title>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --emerald: #1a6b4a;
+            --emerald-light: #2d9067;
+            --emerald-pale: #e8f5ef;
+            --gold: #c9a84c;
+            --gold-light: #e8c97a;
+            --cream: #faf8f3;
+            --ink: #1c2018;
+            --ink-soft: #3d4438;
+            --border: #d8e8df;
+            --shadow: rgba(26,107,74,0.12);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: var(--cream);
+            font-family: 'Cairo', sans-serif;
+            color: var(--ink);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background:
+                radial-gradient(ellipse at 10% 10%, rgba(26,107,74,0.07) 0%, transparent 50%),
+                radial-gradient(ellipse at 90% 80%, rgba(201,168,76,0.07) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+        .page-wrapper {
+            position: relative;
+            z-index: 1;
+            max-width: 680px;
+            margin: 0 auto;
+            padding: 30px 20px 60px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 36px;
+            animation: fadeDown 0.7s ease both;
+        }
+        .logo-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 76px; height: 76px;
+            background: linear-gradient(135deg, var(--emerald), var(--emerald-light));
+            border-radius: 50%;
+            margin: 0 auto 16px;
+            box-shadow: 0 8px 30px var(--shadow);
+            font-size: 32px;
+        }
+        .header h1 {
+            font-family: 'Amiri', serif;
+            font-size: 2rem;
+            color: var(--emerald);
+            line-height: 1.4;
+            margin-bottom: 6px;
+        }
+        .header .subtitle {
+            font-size: 0.95rem;
+            color: var(--ink-soft);
+            font-weight: 400;
+        }
+        .gold-divider {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 20px 0;
+        }
+        .gold-divider::before, .gold-divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(to left, transparent, var(--gold), transparent);
+        }
+        .gold-divider span { color: var(--gold); font-size: 1.2rem; }
+
+        .intro-card {
+            background: white;
+            border: 1px solid var(--border);
+            border-right: 4px solid var(--emerald);
+            border-radius: 14px;
+            padding: 20px 24px;
+            margin-bottom: 32px;
+            font-size: 0.95rem;
+            line-height: 1.9;
+            color: var(--ink-soft);
+            box-shadow: 0 4px 20px var(--shadow);
+            animation: fadeUp 0.6s 0.2s ease both;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            animation: fadeUp 0.6s ease both;
+        }
+        .form-label {
+            display: block;
+            font-weight: 600;
+            color: var(--ink);
+            margin-bottom: 6px;
+            font-size: 0.95rem;
+        }
+        .form-input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1.5px solid var(--border);
+            border-radius: 10px;
+            font-family: 'Cairo', sans-serif;
+            font-size: 0.9rem;
+            background: white;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            direction: rtl;
+        }
+        .form-input:focus {
+            outline: none;
+            border-color: var(--emerald-light);
+            box-shadow: 0 0 0 3px rgba(26,107,74,0.1);
+        }
+
+        .submit-area {
+            text-align: center;
+            margin-top: 28px;
+            animation: fadeUp 0.6s 0.4s ease both;
+        }
+        .submit-btn {
+            background: linear-gradient(135deg, var(--emerald), var(--emerald-light));
+            color: white;
+            border: none;
+            padding: 15px 50px;
+            border-radius: 40px;
+            font-family: 'Cairo', sans-serif;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            letter-spacing: 0.5px;
+            box-shadow: 0 8px 28px rgba(26,107,74,0.3);
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        .submit-btn::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+            transition: left 0.5s;
+        }
+        .submit-btn:hover::before { left: 100%; }
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 36px rgba(26,107,74,0.4);
+        }
+        .submit-btn:active { transform: translateY(0); }
+        .submit-btn:disabled { opacity: 0.7; transform: none; box-shadow: 0 4px 15px rgba(26,107,74,0.2); cursor: not-allowed; }
+
+        .error-msg {
+            color: #c0392b;
+            background: #fceaea;
+            border: 1px solid #e0b4b4;
+            border-radius: 8px;
+            padding: 10px 16px;
+            margin-top: 10px;
+            font-size: 0.85rem;
+            display: none;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            color: #8aab96;
+            font-size: 0.8rem;
+        }
+
+        @keyframes fadeDown {
+            from { opacity: 0; transform: translateY(-16px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 500px) {
+            .header h1 { font-size: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+<div class="page-wrapper">
+
+    <!-- Header -->
+    <div class="header">
+        <div class="logo-badge">🌿</div>
+        <h1>مركز آل حنزاب</h1>
+        <p class="subtitle">بوابة الموظفين</p>
+        <div class="gold-divider"><span>✦</span></div>
+    </div>
+
+    <!-- Intro -->
+    <div class="intro-card">
+        الرجاء إدخال الرقم الشخصي للموظف للمتابعة.
+    </div>
+
+    <!-- ID Input Form -->
+    <form id="idForm">
+        <div class="form-group">
+            <label class="form-label" for="employeeId">الرقم الشخصي (11 رقم)</label>
+            <input type="text" id="employeeId" name="employeeId" class="form-input" 
+                   placeholder="أدخل الرقم الشخصي" required dir="ltr" style="text-align: right;"
+                   inputmode="numeric" pattern="\d{11}" maxlength="11">
+        </div>
+
+        <div class="error-msg" id="errorMsg"></div>
+
+        <div class="submit-area">
+            <button type="submit" class="submit-btn">✦ دخول ✦</button>
+        </div>
+    </form>
+
+    <div class="footer">مركز آل حنزاب – نظام إرسال الرسائل 🌿</div>
+</div>
+
+<script>
+    // ⚠️ REPLACE THIS URL with your Google Apps Script deployment URL
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwxHVk7gOD62wap2LMdgy-yTMLbEr1dSeVwx4EpgKCIZ4YGa-_iN07CeN5vQ-qs6lko/exec";
+
+    const form = document.getElementById('idForm');
+    const errorDiv = document.getElementById('errorMsg');
+    const submitBtn = form.querySelector('.submit-btn');
+
+    form.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        errorDiv.style.display = 'none';
+
+        let id = document.getElementById('employeeId').value.trim();
+
+        // Quick client-side check: 11 digits only
+        if (!/^\d{11}$/.test(id)) {
+            showError('الرجاء إدخال رقم شخصي صحيح مكون من 11 رقم.');
+            return;
+        }
+
+        submitBtn.textContent = 'جاري التحقق...';
+        submitBtn.disabled = true;
+
+        try {
+            const response = await fetch(`${SCRIPT_URL}?id=${encodeURIComponent(id)}`);
+            const data = await response.json();
+
+            if (data.error) {
+                showError(data.error);
+                submitBtn.textContent = '✦ دخول ✦';
+                submitBtn.disabled = false;
+                return;
+            }
+
+            // Success – redirect to message page with ID and name
+            const name = encodeURIComponent(data.name);
+            window.location.href = `message.html?id=${encodeURIComponent(id)}&name=${name}`;
+
+        } catch (err) {
+            showError('حدث خطأ في الاتصال. يرجى المحاولة مرة أخرى.');
+            console.error(err);
+            submitBtn.textContent = '✦ دخول ✦';
+            submitBtn.disabled = false;
+        }
+    });
+
+    function showError(msg) {
+        errorDiv.textContent = msg;
+        errorDiv.style.display = 'block';
+    }
+</script>
+</body>
+</html>
