@@ -361,7 +361,7 @@
 
 <script>
     // ⚠️ REPLACE with your Survey Apps Script Web App URL
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwvz6jzapPZjzn95sMi2koeCPSKa2Fmb422ZPmCvWvWw8xnDU8KOLqN3qEP-z0uHxCjcw/exec";
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwHLxTTl18nJZ1EBWtEt0-vU6AajJgC5xXmNwv6OD7g8uxYM5w9IO8StsFy7qIm7Rht/exec";
 
     const phoneCard = document.getElementById('phoneCard');
     const surveySection = document.getElementById('surveySection');
@@ -438,48 +438,58 @@
         phoneError.style.display = 'block';
     }
 
-    surveyForm.addEventListener('submit', async function(e) {
-        e.preventDefault();
-        formError.style.display = 'none';
+surveyForm.addEventListener('submit', async function(e) {
+    e.preventDefault();
+    formError.style.display = 'none';
 
-        // Collect answers
-        const answers = {};
-        for (let i = 1; i <= 8; i++) {
-            const selected = document.querySelector(`input[name="q${i}"]:checked`);
-            if (!selected) {
-                showFormError('الرجاء الإجابة على جميع الأسئلة.');
-                return;
-            }
-            answers[`q${i}`] = selected.value;
+    // Collect answers
+    const answers = {};
+    for (let i = 1; i <= 8; i++) {
+        const selected = document.querySelector(`input[name="q${i}"]:checked`);
+        if (!selected) {
+            showFormError('الرجاء الإجابة على جميع الأسئلة.');
+            return;
         }
+        answers[`q${i}`] = selected.value;
+    }
 
-        submitBtn.textContent = 'جاري الإرسال...';
-        submitBtn.disabled = true;
+    submitBtn.textContent = 'جاري الإرسال...';
+    submitBtn.disabled = true;
 
-        const payload = {
-            phone: parentPhone,
-            children: childrenNames,
-            answers: answers
-        };
+    const payload = {
+        phone: parentPhone,
+        children: childrenNames,
+        answers: answers
+    };
 
-        try {
-            await fetch(SCRIPT_URL, {
-                method: 'POST',
-                mode: 'no-cors',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            });
+    try {
+        // Use text/plain to avoid CORS preflight; server will parse JSON from postData.contents
+        const response = await fetch(SCRIPT_URL, {
+            method: 'POST',
+            mode: 'cors',           // allow reading the response
+            headers: { 'Content-Type': 'text/plain;charset=UTF-8' },
+            body: JSON.stringify(payload)
+        });
 
-            // Because of no-cors we assume success and redirect
-            window.location.href = 'survey-thanks.html';
+        const data = await response.json();
 
-        } catch (err) {
-            showFormError('حدث خطأ أثناء الإرسال. يرجى المحاولة مرة أخرى.');
-            console.error(err);
+        if (data.error) {
+            showFormError(data.error);
             submitBtn.textContent = 'إرسال الاستبيان';
             submitBtn.disabled = false;
+            return;
         }
-    });
+
+        // Success – redirect to thank you page
+        window.location.href = 'survey-thanks.html';
+
+    } catch (err) {
+        showFormError('حدث خطأ أثناء الإرسال. يرجى المحاولة مرة أخرى.');
+        console.error(err);
+        submitBtn.textContent = 'إرسال الاستبيان';
+        submitBtn.disabled = false;
+    }
+});
 
     function showFormError(msg) {
         formError.textContent = msg;
